@@ -1,0 +1,109 @@
+;-----------------------------------
+;2009/11/6 01:14pm
+;2009/12/10 02:39pm, add "c0" data which part is empty
+;Behind ";" symbol are comment string
+;--[0]Used for Master write-read command
+;--[1]Used for FRU read-write command
+FRU_INTERFACE                     =  1
+;ex. 1 -> for FRU read-write command used, depend on project
+FRU_BUF_SIZE                      =  100
+;ex. FRU buffer size, 100 -> 256bytes
+;--FRU device id, for FRU read-write command used
+FRU_ID                            =  0
+;
+;--8bits slave addr and channel, Master write-read command used
+;FRU_ADDRESS                      =  ac
+;FRU_CHANNEL                      =  3
+;
+;--target_addr
+;--target_channel
+;TARGET_ADDR                      =  0
+;TARGET_CHANNEL                   =  0 
+;-----------------------------------
+;<custom hex data format>
+;ex. custom hex data = y,testhex,c0,11,22
+;ex. custom hex data = n,testhex1,c0,11,22
+;'y' or 'n' indicate this data write or not, if don't write data on this stage, keep 'n'
+;"testhex", just for display purpose
+;'c0' type length byte must have
+;'11', '22' hex data
+;-----------------------------------
+;<custom hex random data format>
+;ex. custom hex random data = y,c0,05,testhex
+;ex. custom hex random data = n,c0,04,testhex1
+;'y' or 'n' indicate this data write or not, if don't write data on this stage, keep 'n'
+;'c0' type length byte must have
+;'05', run time key-in hex data length, hexadecimal
+;"testhex", just for display purpose
+;-----------------------------------
+;<custom char data format>
+;ex. custom char data = y,testchar,c0,a1b2
+;ex. custom char data = n,testchar1,c0,a1b2c3
+;'y' or 'n' indicate this data write or not, if don't write data on this stage, keep 'n'
+;"testchar", just for display purpose
+;'c0' type length byte must have
+;"a1b2" char data
+;-----------------------------------
+;<custom char random data format>
+;ex. custom char random data = y,c0,03,testchar
+;ex. custom char random data = n,c0,05,testchar1
+;'y' or 'n' indicate this data write or not, if don't write data on this stage, keep 'n'
+;'c0' type length byte must have
+;'03', run time key-in char data length, hexadecimal
+;"testchar", just for display purpose
+;-----------------------------------
+;<custom mfg date time>
+;ex. custom mfg date time = 01
+;'01' means write date time(number of minutes from 0:00 hrs 1/1/96) info to FRU
+;-----------------------------------
+;<custom remaining>
+;ex. custom remaining = 00
+;ex. custom remaining = aa
+;'00' any remaining unused space fill '00' 
+-----------------------------------
+COMMON HEADER FORMAT VERSION      =  01      
+COMMON HEADER PAD                 =  00	     
+-----------------------------------
+-----------------------------------
+;INTERNAL USE FORMAT VERSION      =  01   
+;CUSTOM HEX DATA                  =  y,testhex,c0,11,22,33,44
+;CUSTOM HEX RANDOM DATA           =  y,c0,05,test_data
+;CUSTOM CHAR DATA                 =  y,testchar,c0,abcde
+;CUSTOM CHAR RANDOM DATA          =  y,c0,05,test_data1
+;CUSTOM HEX DATA                  =  y,no_more_data,c1
+;CUSTOM REMAINING                 =  00
+-----------------------------------
+-----------------------------------
+CHASSIS INFO AREA FORMAT VERSION  =  01
+CUSTOM HEX DATA                   =  y,chassis_type,17
+CUSTOM HEX DATA                   =  y,part_no,c0
+CUSTOM CHAR RANDOM DATA           =  y,c0,0d,serial_no
+CUSTOM HEX DATA                   =  y,no_more_data,c1
+CUSTOM REMAINING                  =  00
+-----------------------------------
+-----------------------------------
+BOARD AREA FORMAT VERSION         =  01
+CUSTOM HEX DATA                   =  y,language_code,19
+CUSTOM MFG DATE TIME              =  01
+CUSTOM CHAR DATA                  =  y,mfg,c0,Quanta
+CUSTOM CHAR DATA                  =  y,product,c0,S210-X12RS
+CUSTOM CHAR RANDOM DATA           =  y,c0,0e,serial_no
+CUSTOM CHAR DATA                  =  y,part_no,c0,31S2RMB0020
+CUSTOM CHAR DATA                  =  y,fru_file_id_empty,c0,1
+CUSTOM HEX DATA                   =  y,no_more_data,c1
+CUSTOM REMAINING                  =  00
+-----------------------------------
+-----------------------------------
+PRODUCT AREA FORMAT VERSION       =  01
+CUSTOM HEX DATA                   =  y,language_code,19
+CUSTOM CHAR DATA                  =  y,mfg,c0,Quanta
+CUSTOM CHAR DATA                  =  y,name,c0,S210-X12RS
+CUSTOM HEX DATA                   =  y,part_no,c0
+CUSTOM HEX DATA                   =  y,version,c0
+CUSTOM CHAR RANDOM DATA           =  y,c0,0d,serial_no
+CUSTOM HEX DATA                   =  y,asset_tag_empty,c0
+CUSTOM CHAR DATA                  =  y,fru_file_id_empty,c0,1
+CUSTOM HEX DATA                   =  y,no_more_data,c1
+CUSTOM REMAINING                  =  00
+-----------------------------------
+  

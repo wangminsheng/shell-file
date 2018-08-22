@@ -1,0 +1,22 @@
+          +--------------------------------------+
+               S2R test program release note
+          +--------------------------------------+
+
+ 
+
+===================== S2R_2A01 ===========================
+[Customer]: S/I
+[Model name] : S2R
+[Test program version]: 2A01
+[Rework program version] : N/A
+[Test image version] : N/A
+[BIOS version] : S2RS3A01
+[MB BMC version] : 2.08
+[Date] : 2011/12/14
+[Description of change content] 
+1.First creat for S2RQ/S2RS Function Test.   
+
+
+
+
+

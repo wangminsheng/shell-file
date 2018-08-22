@@ -1,0 +1,24 @@
+==========================================<QCILxDiag_V099>
+[20110621]
+Replace lhdd with HDDTest V0.95
+	PCIe with V0.95 (by YJ)
+
+Open:
+1. nictest V1.34 or V1.4 with 10G support and fix cross domain issue of external loopback.
+2. Remove xxx test tool. (lvtype?)
+
+==========================================<QCILxDiag_V098>
+[20110325]
+Update netled, nictest:
+1. "nictest" V1.32b fix below issue:
+	packet throughput will drop when 2+ UUT perform echo request to server.
+2. 1st release "netled_V01" package for NIC LED testing.
+	Driver support only Cnnected_Speed. 
+	For example, only 1000M is tested and NO 100M 10M switched/verified.
+
+[20101214]
+update BMCtest:
+1. modify sensor checking behave, some seneor status is null(empty)
+==========================================<QCILxDiag_V097>
+Based on QCILxDiag_V096, update PCIe diagnostic.
+(fix the PCIe config check issue and log the PCI/PCIE info in LogFile.log.)

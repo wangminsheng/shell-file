@@ -1,0 +1,12 @@
+#!/bin/sh
+echo "---" > CDMESG.log
+while [ 1 ];do
+sleep 60
+dmesg -c | \
+egrep -v "(^RPC:|USB device not accepting new address|error_exit|Invalid command opcode|USB Mass Storage Data integrity not assured)" | \
+egrep -i '(3w-xxxx:.* Bad|ECC: SBE|ECC: MBE|stuck.*on.*IPI.*wait|warning|error|NMI|critical|CPU.[0-9]:.*Machine.Check.Exception|scsi : aborting command due to timeout)|(VM:.*failed)'
+if [ $? == 0 ]; then 
+  {
+  echo "kernel error detected from dmesg : failed" >> CDMESG.log
+  }; fi
+done

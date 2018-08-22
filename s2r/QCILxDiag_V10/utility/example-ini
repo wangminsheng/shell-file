@@ -1,0 +1,234 @@
+;*** For Common Structure ***
+;
+FRU_DATA_SIZE=f0
+;
+;8 bits addr
+FRU_ADDRESS=ac
+;
+FRU_CHANNEL=3
+;
+;
+;*** For Write In Structure ***
+;Common header
+;fru_data_in:offset, len, data
+FRU_DATA_IN=00,01,01
+FRU_DATA_IN=01,01,1b
+FRU_DATA_IN=03,01,01
+FRU_DATA_IN=04,01,0d
+;
+;checksum_fru_in:offset, start add, end add
+CHECKSUM_FRU_IN=07,00,06
+;
+;Board info area
+;fru_data_in:offset, len, data
+FRU_DATA_IN=08,01,01
+FRU_DATA_IN=09,01,0c
+FRU_DATA_IN=0a,01,0
+;
+;date_fru_in:offset, len, format
+DATE_FRU_IN=0b,03,00
+;
+;fru_data_in:offset, len, data
+FRU_DATA_IN=0e,01,d1
+FRU_DATA_IN=0f,11,43,69,73,63,6f,20,53,79,73,74,65,6d,73,20,49,6e,63
+FRU_DATA_IN=20,01,d2
+FRU_DATA_IN=21,12,52,32,31,30,2d,32,31,32,31,36,30,35,20,20,20,20,20,20
+FRU_DATA_IN=33,01,cb
+;
+;in_data_string:string
+IN_DATA_STRING=BOARD_SERIAL_NO
+;
+;in_data:offset, len
+IN_DATA=34,0b
+;
+;fru_data_in:offset, len, data
+FRU_DATA_IN=3f,01,cb
+FRU_DATA_IN=40,0b,37,34,2d,36,38,38,32,2d,30,31,20
+FRU_DATA_IN=4b,01,c4
+FRU_DATA_IN=50,01,c6
+FRU_DATA_IN=51,02,00,31
+FRU_DATA_IN=53,01,00
+FRU_DATA_IN=54,03,56,30,30
+FRU_DATA_IN=57,01,ce
+FRU_DATA_IN=58,0e,30,30,30,30,30,30,30,30,30,00,00,00,00
+FRU_DATA_IN=66,01,c1
+;
+;checksum_fru_in:offset, start add, end add
+CHECKSUM_FRU_IN=67,08,66
+;
+;Product info area
+;fru_data_in:offset, len, data
+FRU_DATA_IN=68,01,01
+FRU_DATA_IN=69,01,0e
+FRU_DATA_IN=6b,01,d1
+FRU_DATA_IN=6c,11,43,69,73,63,6f,20,53,79,73,74,65,6d,73,20,49,6e,63
+FRU_DATA_IN=7d,01,d2
+FRU_DATA_IN=7e,12,52,32,31,30,2d,32,31,32,31,36,30,35,20,20,20,20,20,20
+FRU_DATA_IN=90,01,cb
+FRU_DATA_IN=91,0b,37,34,2d,36,38,38,32,2d,30,31,20
+FRU_DATA_IN=9c,01,c1
+FRU_DATA_IN=9e,01,cb
+;
+;in_data_string:string
+IN_DATA_STRING=PRODUCT_SERIAL_NO
+;
+;in_data:offset, len
+IN_DATA=9f,0b
+;
+;fru_data_in:offset, len, data
+FRU_DATA_IN=aa,01,dc
+FRU_DATA_IN=c7,01,c8
+FRU_DATA_IN=d0,01,c5
+FRU_DATA_IN=d1,02,00,31
+FRU_DATA_IN=d3,03,56,30,30
+FRU_DATA_IN=d6,01,c1
+;
+;checksum_fru_in:offset, start add, end add
+CHECKSUM_FRU_IN=d7,68,d6
+;
+;Internal use area
+;fru_data_in:offset, len, data
+FRU_DATA_IN=d8,01,01
+FRU_DATA_IN=d9,01,03
+FRU_DATA_IN=da,02,00,05
+FRU_DATA_IN=dc,02,00,01
+FRU_DATA_IN=de,02,00,0c
+FRU_DATA_IN=e0,01,01
+FRU_DATA_IN=e1,01,02
+FRU_DATA_IN=e2,02,00,04
+FRU_DATA_IN=e4,01,02
+FRU_DATA_IN=e5,01,06
+;
+;in_data_string:string
+IN_DATA_STRING=MAC_ADDRESS
+;
+;in_mac_data:offset, len
+IN_MAC_DATA=e6,06
+;
+;fru_data_in:offset, len, data
+FRU_DATA_IN=ec,01,02
+;
+;checksum_fru_in:offset, start add, end add
+CHECKSUM_FRU_IN=ef,d8,ee
+;
+;
+;
+;*** For Read Out Strcuture ***
+;out_data_string:string
+OUT_DATA_STRING=Common_Header_CS
+;
+;checksum_fru_out:offset, start add, end add
+CHECKSUM_FRU_OUT=07,00,06
+;
+;out_data_string:string
+OUT_DATA_STRING=Board_Language_Code
+;
+;fru_data_out:offset, len, format
+FRU_DATA_OUT=0a,01,x
+;
+;out_data_string:string
+OUT_DATA_STRING=MFG_Date_Time
+;
+;date_fru_out:offset, len, format
+DATE_FRU_OUT=0b,03,00
+;
+;out_data_string:string
+OUT_DATA_STRING=Board_MFG_INFO
+;
+;fru_data_out:offset, len, format
+FRU_DATA_OUT=0f,11,c
+;
+;out_data_string:string
+OUT_DATA_STRING=Board_PRO_NAME
+;
+;fru_data_out:offset, len, format
+FRU_DATA_OUT=21,12,c
+;
+;out_data_string:string
+OUT_DATA_STRING=Board_Serial_NO
+;
+;fru_data_out:offset, len, format
+FRU_DATA_OUT=34,0b,c
+;
+;out_data_string:string
+OUT_DATA_STRING=Board_Part_NO
+;
+;fru_data_out:offset, len, format
+FRU_DATA_OUT=40,0b,c
+;
+;out_data_string:string
+OUT_DATA_STRING=Board_Part_NO_REV
+;
+;fru_data_out:offset, len, format
+FRU_DATA_OUT=51,02,c
+;
+;out_data_string:string
+OUT_DATA_STRING=Board_VID
+;
+;fru_data_out:offset, len, format
+FRU_DATA_OUT=54,03,c
+;
+;out_data_string:string
+OUT_DATA_STRING=Board_area_CS
+;
+;checksum_fru_out:offset, start add, end add
+CHECKSUM_FRU_OUT=67,08,66
+;
+;out_data_string:string
+OUT_DATA_STRING=Product_Language_Code
+;
+;fru_data_out:offset, len, format
+FRU_DATA_OUT=6a,01,x
+;
+;out_data_string:string
+OUT_DATA_STRING=Product_MFG_INFO
+;
+;fru_data_out:offset, len, format
+FRU_DATA_OUT=6c,11,c
+;
+;out_data_string:string
+OUT_DATA_STRING=Product_PRO_NAME
+;
+;fru_data_out:offset, len, format
+FRU_DATA_OUT=7e,12,c
+;
+;out_data_string:string
+OUT_DATA_STRING=Product_Part_NO
+;
+;fru_data_out:offset, len, format
+FRU_DATA_OUT=91,0b,c
+;
+;out_data_string:string
+OUT_DATA_STRING=Product_Serial_NO
+;
+;fru_data_out:offset, len, format
+FRU_DATA_OUT=9f,0b,c
+;
+;out_data_string:string
+OUT_DATA_STRING=Product_Part_NO_REV
+;
+;fru_data_out:offset, len, format
+FRU_DATA_OUT=d1,02,c
+;
+;out_data_string:string
+OUT_DATA_STRING=Product_VID
+;fru_data_out:offset, len, format
+FRU_DATA_OUT=d3,03,c
+;
+;out_data_string:string
+OUT_DATA_STRING=Product_area_CS
+;
+;checksum_fru_out:offset, start add, end add
+CHECKSUM_FRU_OUT=d7,68,d6
+;
+;out_data_string:string
+OUT_DATA_STRING=MAC_ADDR
+;
+;out_mac_data:offset, len
+OUT_MAC_DATA=e6,06
+;
+;out_data_string:string
+OUT_DATA_STRING=Internal_area_CS
+;
+;checksum_fru_out:offset, start add, end add
+CHECKSUM_FRU_OUT=ef,d8,ee

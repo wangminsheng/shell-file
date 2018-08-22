@@ -1,0 +1,7 @@
+ Chassis Type          : Rack Mount Chassis
+ Board Mfg             : Quanta
+ Board Product         : S210-X22RQ
+ Board Serial          : QTFBEV20300004
+ Board Part Number     : 31S2RMB0040
+ Product Manufacturer  : Quanta
+ Product Name          : S210-X22RQ

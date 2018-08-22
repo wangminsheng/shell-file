@@ -1,0 +1,55 @@
+#!/bin/bash
+
+#BatteryType: iBBU08 Device Name: bq27541
+
+bbu_num_chk(){
+  rm -rf linkall.cfy
+  cp /test/s2r/linkall.cfy .
+  exp_bbu_nu=`cat linkall.cfy |grep "BATTERY CARD SN=" |wc -l`
+  MegaCli64 -AdpBbuCmd -a0 >bbu.log
+#  grep "Get BBU Status Failed" bbu.log
+  if [ $? -ne 0 ]; then
+    get_bbu_nu=0
+  else
+    get_bbu_nu=1
+  fi
+  echo -en "BBU number check :  " |tee -a $Logfile
+  if [ $exp_bbu_nu -ne $get_bbu_nu ]; then
+    print_red "FAIL [ exp> $exp_bbu_nu get> $get_bbu_nu ]" |tee -a $Logfile
+    show_exit
+  else
+    print_green "PASS [ exp> $exp_bbu_nu ]" |tee -a $Logfile
+  fi
+    
+}
+	
+
+#check BBU Firmware Status
+bbu_fw_status_chk(){
+  errmsg="0x00"
+  grep "Voltage                      : OK" bbu.log
+	if [ $? != "0" ]; then
+		errmsg="0x01"
+	fi
+	
+	grep "Temperature                  : OK" bbu.log
+  if [ $? != "0" ]; then
+	 errmsg="0x02"
+  fi
+  if [ "$errmsg" != "0x00" ];then
+    print_red "BBU firmware status check FAIL" |tee -a $Logfile
+    echo "Voltage or Temperature check FAIL" >>$Logfile
+    cat bbu.log >>$Logfile
+    show_exit
+  else
+    print_green "BBU firmware status check PASS" |tee -a $Logfile
+    cat bbu.log >>$Logfile
+    sleep 1
+  fi
+}
+
+bbu_num_chk
+#if [ $get_bbu_nu -eq 1 ]; then
+#  bbu_fw_status_chk
+#fi
+

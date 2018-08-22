@@ -1,0 +1,11 @@
+#!/bin/sh
+echo "---" > EDAC.log
+while [ 1 ];do
+sleep 10
+data=`dmesg | egrep "(edac|EDAC)" | egrep -v "Ver"`
+if [ $? == 0 ]; then 
+  {
+  echo $data >> EDAC.log
+  echo "EDAC Checked : failed" >> EDAC.log
+  }; fi
+done

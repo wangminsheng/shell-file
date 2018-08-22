@@ -1,0 +1,220 @@
+#!/bin/bash
+#ver:0.02 2012/02/28 add red LED check for S2RQ-3.5 hdd [12]
+#ver:0.01 2012/02/26 
+
+delete_mr_volume(){
+
+    MegaCli64 -CfgClr -aALL
+     status=$?
+    if [ $status -ne 0 ];then
+        print_red "Error (delete_mr_volume): MegaCli64 failed with status $status" |tee -a $Logfile
+        show_exit
+    else
+        print_green "MegCli64 config clear PASS" |tee -a $Logfile
+    fi
+    sleep 2
+}
+
+get_hdd_num(){
+     rm -rf pdlist.tmp
+     MegaCli64 -pdlist -a0 >pdlist.tmp
+     status=$?
+     if [ $status -ne 0 ]; then
+        print_red "Error : MegaCli64 get SATA HDD info FAIL" |tee -a $Logfile
+        show_exit
+     else
+        get_hdd_num=`cat pdlist.tmp |grep "Slot Number:" |wc -l`
+        print_green "Get hdd number form BP : $get_hdd_num " |tee -a $Logfile
+     fi
+     sleep 1
+
+}
+
+get_enclosure_id(){
+     #just for S2RQ 3.5 hdd_number=12
+     enclosue_id=`cat pdlist.tmp |grep "Enclosure Device ID:" |uniq |awk '{print $4}'`
+}
+
+creat_raid_056(){
+     #creat raid 0 5 6 for all free hdd
+     MegaCli64 -cfgallfreedrv -r5 wt adra direct -a0
+     status=$?
+     if [ $status -ne 0 ]; then
+        print_red "Error : MegaCli64 creat raid 5 FAIL" |tee -a $Logfile
+        show_exit
+     else
+        print_green "MegaCli64 creat raid 5 PASS" |tee -a $Logfile
+     fi
+     sleep 1 
+}
+
+offline_drv0(){
+    MegaCli64 -pdoffline -physdrv [$enclosue_id:0] -a0
+    status=$?
+    if [ $status -ne 0 ]; then
+        print_red "Error : MegaCli64 pdoffline physdrv [$enclosue_id:0] -a0 FAIL" |tee -a $Logfile
+        show_exit
+    else
+        print_green "PASS: MegaCli64 pdoffline physdrv [$enclosue_id:0] -a0 FAIL" |tee -a $Logfile
+    fi
+}
+
+
+
+creat_each_raid0(){
+    MegaCli64 -cfgeachdskraid0 -a0 >/dev/null
+    status=$?
+    if [ $status -ne 0 ]; then
+        sleep 2
+        print_red "Error : Creat Raid 0 FAIL" |tee -a $Logfile
+        show_exit
+    else
+        sleep 2
+        print_green "Creat each HDD raid 0 Pass " |tee -a $Logfile
+    fi
+}
+
+rear_sdd_connector_chk(){
+    #on for S2RQ model 
+    #check number and Led
+    #expect number : 2
+    rm -rf drv_list.tmp
+    export exp_sdd_number=2
+    print_yellow "check rear sdd connector now ..." |tee -a $Logfile
+    get_sdd_number=`lshw -short |grep -A7 -i "Patsburg 6-Port SATA AHCI Controller" |grep "/dev/sd" |wc -l`
+    if [ $exp_sdd_number -ne $get_sdd_number ] ;then
+        print_red "sdd number check fail! [ exp> sdd number: $exp_sdd_number; get> sdd number: $get_sdd_number]" |tee -a $Logfile
+        print_yellow "Please check rear sdd connector or have 2 sdd storage insert ..."
+        show_exit
+    else
+        print_green "check rear sdd connector PASS!" |tee -a $Logfile
+    fi
+    sleep 1
+    print_yellow "check rear sdd board Led now ...." |tee -a $Logfile
+    lshw -short |grep -A7 -i "Patsburg 6-Port SATA AHCI Controller" |grep "/dev/sd" |awk '{print $2}' >drv_list.tmp
+    for sdd in `cat drv_list.tmp` 
+    do
+      dd if=$sdd of=/dev/null bs=1 count=1
+      status=$?
+      if [ $status -ne 0 ]; then
+          print_red "$sdd led check FAIL " |tee -a $Logfile
+          show_exit
+      else
+          print_green "$sdd led check PASS " |tee -a $Logfile
+      fi
+    done
+}
+
+s2rs_35_hdd_chk(){
+  #for S2RS 3.5 model
+  #check number and Led
+  #expect number : 4
+  rm -rf drv_list.tmp
+  export exp_sdd_number=4
+  print_yellow "check S2RS-3.5 HDD connector now ..." |tee -a $Logfile
+  get_sdd_number=`lshw -short |grep -A5 "Patsburg 4-Port SATA Storage Control Unit" |grep "/dev/sd" |wc -l`
+  if [ $exp_sdd_number -ne $get_sdd_number ]; then
+     print_red "sdd number check fail! [ exp> sdd number: $exp_sdd_number; get> sdd number: $get_sdd_number]" |tee -a $Logfile
+     print_yellow "Please check front HDD connector or have 4 Hdd storage insert ..."
+     show_exit
+  else
+      print_green "check front HDD connector PASS!" |tee -a $Logfile
+  fi  
+  sleep 1
+  print_yellow "check front Hdd Led now ...." |tee -a $Logfile
+  lshw -short |grep -A5 "Patsburg 4-Port SATA Storage Control Unit" |grep "/dev/sd" |awk '{print $2}' >drv_list.tmp
+  for sdd in `cat drv_list.tmp` 
+  do
+      dd if=$sdd of=/dev/null bs=1 count=1
+      status=$?
+      if [ $status -ne 0 ]; then
+          print_red "$sdd led check FAIL " |tee -a $Logfile
+          show_exit
+      else
+          print_green "$sdd led check PASS " |tee -a $Logfile
+      fi
+  done
+}
+
+s2rq_35_hdd_chk(){
+      #add time 2012/02/26
+      #for S2RQ 3.5 HDD number =12; SDD=2; USB=1     
+      delete_mr_volume
+      rear_sdd_connector_chk
+      sleep 2
+      print_yellow "Now check fornt HDD number and LED... Press anykey to continue ...."
+      anykey
+      export exp_hdd_num=12
+      get_hdd_num
+      if [ $exp_hdd_num -ne $get_hdd_num ]; then
+        print_red "The front HDD number check FAIL: [exp : $exp_hdd_num  get : $get_hdd_num ]" |tee -a $Logfile
+        show_exit
+      else
+        print_green "HDD Number check PASS" |tee -a $Logfile
+      fi
+      sleep 1
+      creat_each_raid0
+      echo "sleep 5"; sleep 5
+      delete_mr_volume
+      sleep 1
+      man_answer "The front HDD led check PASS or FAIL [Y/N]?"
+      echo ".$answer."
+      if [ "$answer" == "Y" ] || [ "$answer" == "P" ]; then
+        print_green "OP check Front HDD led PASS " |tee -a $Logfile
+      else
+        print_red "OP check Front HDD led FAIL " |tee -a $Logfile
+        show_exit
+      fi
+}
+
+s2rq_35_hdd_red_led(){
+      #add time 2012/02/26
+      #for S2RQ 3.5 HDD number =12; SDD=2; USB=1 
+      print_yellow "Now check fornt HDD red LED... Press anykey to continue ...."
+      anykey
+      get_enclosure_id
+      creat_raid_056
+      sleep 2
+      offline_drv0
+      man_answer "The front HDD led light red color YES or No [Y/N]?"
+      echo ".$answer."
+      if [ "$answer" == "Y" ] || [ "$answer" == "P" ]; then
+        delete_mr_volume
+        print_green "OP check Front HDD red color PASS " |tee -a $Logfile
+      else
+        print_red "OP check Front HDD led color FAIL " |tee -a $Logfile
+        show_exit
+      fi
+}
+
+
+
+hdd_test(){
+  if [ "$SHOW_MD" == "S2RQ" ]; then
+    if [ "$CONFIG" == "1S2RZZZ0ST5" ] || [ "$CONFIG" == "1S2RZZZ0ST6" ] || [ "$CONFIG" == "1S2RZZZ0ST8" ] || [ "$CONFIG" == "1S2RZZZ0ST9" ]; then
+      s2rq_35_hdd_chk
+      s2rq_35_hdd_red_led
+    elif [ "$CONFIG" == "1S2RZZZ0ST4" ] || [ "$CONFIG" == "1S2RZZZ0ST7" ]; then
+      #for S2RQ 2.5
+      DIAG_NAME=lhdd     
+      FT "Storage(HDD0)" "$DIAG_NAME -drv sda -interval 1000"
+      FT "Storage(HDD1)" "$DIAG_NAME -drv sdb -interval 1000"
+      FT "Storage(HDD2)" "$DIAG_NAME -drv sdc -interval 1000"
+      FT "Storage(HDD3)" "$DIAG_NAME -drv sdd -interval 1000"
+    fi
+  elif [ "$SHOW_MD" == "S2RS" ]; then
+    if [ "$CONFIG" == "1S2RZZZ0STA" ] || [ "$CONFIG" == "1S2RZZZ0STB" ]; then
+      #for S2RS 3.5 #HDD test 4 HDD
+      s2rs_35_hdd_chk
+      
+  elif [ "$CONFIG" == "1S2RZZ0STC" ] || [ "$CONFIG" == "1S2RZZZ0STD" ] || [ "$CONFIG" == "1S2RZZZ0STE" ] || [ "$CONFIG" == "1S2RZZZ0STF" ]; then
+      #for S2RS 2.5
+      DIAG_NAME=lhdd     
+      FT "Storage(HDD0)" "$DIAG_NAME -drv sda -interval 1000"
+      FT "Storage(HDD1)" "$DIAG_NAME -drv sdb -interval 1000"
+      FT "Storage(HDD2)" "$DIAG_NAME -drv sdc -interval 1000"
+      FT "Storage(HDD3)" "$DIAG_NAME -drv sdd -interval 1000"
+    fi
+  fi     
+}
+hdd_test
