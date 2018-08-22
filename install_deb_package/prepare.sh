@@ -24,6 +24,12 @@ print_yellow(){
 	echo -e $YELLOW$@$NORMAL
 }
 
+run_as_root(){
+	if [ $(id -u) -ne 0 ];then
+		print_red "run script $0 not root"
+		exit 0
+	fi
+}
 
 reconf_tzdata(){
 	print_yellow "[ Reconfigure time zone to Shanghai... ]" |tee $LOGFILE
@@ -281,6 +287,7 @@ online_prepare(){
 
 #main
 main(){
+	run_as_root
 	ping -c1 8.8.8.8 >/dev/null
 	if [ $? -ne 0 ];then
 		offline_prepare
