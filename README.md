@@ -14,8 +14,8 @@ Windows Samba 共享文件夹部署指南
 
 |名称|操作系统|IP地址|
 |---|---|---
-|Samba 宿主机|Windows 2016 Server|11.11.1.94|
-|域控主机（zy01.com）|Windows 2016 Server|11.11.1.32|
+|Samba 宿主机|Windows 2016 Server|11.11.1.94/23|
+|域控主机（zy01.com）|Windows 2016 Server|11.11.1.32/23|
 
 ***
 操作步骤：  
