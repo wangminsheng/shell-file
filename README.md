@@ -1,13 +1,11 @@
-README
+Windows Samba 共享文件夹部署指南
 ===========================
-该文件用来测试和展示书写README的各种markdown语法。GitHub的markdown语法在标准的markdown语法基础上做了扩充，称之为`GitHub Flavored Markdown`。简称`GFM`，GFM在GitHub上有广泛应用，除了README文件外，issues和wiki均支持markdown语法。
-
+在Windows Server 上创建Samba共享目录，提供`纵骥三维云桌面`用户存储公共和私有文件。
 ****
 	
-|hayden|汪民胜|
+|作者|汪民胜|
 |---|---
 |E-mail|yelang007sheng@163.com
 
 
 ****
-## 目录
