@@ -1,4 +1,4 @@
-Windows Samba 共享文件夹部署指南
+# WindowsSamba共享文件夹部署指南
 ===========================
 在Windows Server 上创建Samba共享目录，提供`纵骥三维云桌面`用户存储公共和私有文件。
 ****
@@ -72,4 +72,4 @@ ait commit
  - [ ] 推送提交  
  - [ ] 打开拉取请求
 
-- [↑↑↑   返回顶部（RETURN THE TOP）  ↑↑↑](#共享文件夹部署指南)
+- [↑↑↑   返回顶部（RETURN THE TOP）  ↑↑↑](#WindowsSamba共享文件夹部署指南)
