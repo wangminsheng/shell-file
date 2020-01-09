@@ -36,3 +36,9 @@ Windows Samba 共享文件夹部署指南
 ***
 引用  
 >引用别人说的话
+输入以下命令：  
+```
+git status
+git add
+ait commit
+```
