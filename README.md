@@ -23,4 +23,4 @@ Windows Samba 共享文件夹部署指南
 二、	将Samba宿主机加入到域zy01.com  
 三、	使用域管理员登录到Samba宿主机  
 四、	开始创建公共存储目录和私有目录：    
-创建文件夹：C:\ZY01\public和C:\ZY01\homes 目录  
+  *创建文件夹：C:\ZY01\public和C:\ZY01\homes 目录  
