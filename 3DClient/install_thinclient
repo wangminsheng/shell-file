@@ -1,0 +1,113 @@
+#!/bin/bash
+show_error="[ \e[31mError\e[0m ]"
+show_pass="[ \e[32mPASSED\e[0m ]"
+show_fail="[ \e[31mFAILED\e[0m ]"
+show_warning="[ \e[33mWarning\e[0m ]"
+LOGFILE="/opt/install.log"
+#Color print and strcmp functions
+GREEN="\033[0;32m"
+YELLOW="\033[0;33m"
+RED="\033[0;31m"
+NORMAL="\033[0m"
+print_green(){
+        [ $# -eq 0 ] && return 1
+        echo -e $GREEN$@$NORMAL
+}
+
+print_red(){
+        [ $# -eq 0 ] && return 1
+        echo -e $RED$@$NORMAL
+}
+
+print_yellow(){
+        [ $# -eq 0 ] && return 1
+        echo -e $YELLOW$@$NORMAL
+}
+
+command_exists() {
+        command -v "$@" > /dev/null 2>&1
+}
+
+download_file(){
+	
+	zipfile="3DThinClientUpdate_6.5.4.1103-x64.zip"
+	rm -rf /tmp/$zipfile
+	wget -P /tmp http://11.11.1.88:9000/iso/patch/thinclient/$zipfile
+	if [ $? -eq 0 ];then
+		print_green "download zip file Success " |tee -a $LOGFILE
+	else
+		print_red "download zip file Failed" |tee -a $LOGFILE
+		exit 1
+	fi	
+
+}
+
+chk_user(){
+	stat=1
+	cat /etc/passwd |grep "/bin/bash" |awk -F\: '{print $1}' >/tmp/user.log
+	if [ `grep -c "$1" /tmp/user.log` -eq 1 ];then
+		stat=0
+		return $stat
+	else
+		return $stat
+	fi
+}
+
+choise_user(){
+	print_yellow "Please choise install thinclient software user ...." |tee -a $LOGFILE
+	while true
+	do
+		read -e -p "Enter the User: [ ${USER} ]" user_name
+		user_name=${user_name:-$USER}
+		chk_user "$user_name"
+		if [ $? -ne 0 ];then
+			print_red "$user_name not a valid User, Please Try again..."
+			continue
+		else
+			break
+		fi
+	done
+}
+
+
+
+uzip_file(){
+	choise_user
+	sudo mkdir -p /opt/3dclient
+	if command_exists unzip;then
+		sudo unzip -uq /tmp/$zipfile -d /opt/3dclient
+	fi
+	chown -R $user_name /opt/3dclient
+	
+}
+
+d3client_log(){
+	d3clientlog="/var/log/d3client.log"
+	if [ -f "$d3clientlog" ];then
+		sudo chown -R $user_name $d3clientlog
+	else
+		sudo touch $d3clientlog
+		sudo chown -R $user_name $d3clientlog
+	fi
+}
+
+chk_xfreerdp(){
+	if command_exists xfreerdp; then
+		print_green "xfreerdp is installed on this thinclient " |tee -a $LOGFILE
+	else
+		sudo apt install freerdp2-x11 freerdp2-shadow-x11 -y
+		if [ $? -ne 0 ]; then
+			print_red "xfreerdp installed Failed" |tee -a $LGOFILE
+			exit 1
+		fi
+	fi
+}
+starttime=$(date +%s)
+echo "" > $LOGFILE
+download_file
+uzip_file
+d3client_log
+chk_xfreerdp
+endtime=$(date +%s)
+print_green "$0 running time : $(expr $endtime - $starttime) Seconds." |tee -a $LOGFILE
+
